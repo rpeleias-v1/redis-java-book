@@ -9,7 +9,7 @@ public class ConsumirItemDaFila {
 
     class Mensagem {
         private String nome;
-        private String mensagem;
+        private String email;
 
         public String getNome() {
             return nome;
@@ -19,12 +19,12 @@ public class ConsumirItemDaFila {
             this.nome = nome;
         }
 
-        public String getMensagem() {
-            return mensagem;
+        public String getEmail() {
+            return email;
         }
 
-        public void setMensagem(String mensagem) {
-            this.mensagem = mensagem;
+        public void setEmail(String email) {
+            this.email = email;
         }
     }
 
@@ -36,12 +36,15 @@ public class ConsumirItemDaFila {
         List<String> mensagens = jedis.blpop(timeout, chave);
 
         if (mensagens == null) {
+            System.out.println(String.format(
+                    "A fila %s está vazia.", chave));
+        } else {
             String json = mensagens.get(1);
             Mensagem mensagem = new Gson().fromJson(json, Mensagem.class);
             System.out.println(
                     String.format(
                             "Enviando e-mail para %s (%s)",
-                            mensagem.getMensagem(),
+                            mensagem.getEmail(),
                             mensagem.getNome()
                     )
             );
